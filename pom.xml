@@ -24,8 +24,25 @@
 			<artifactId>zeebe-protocol</artifactId>
 			<version>LATEST</version>
 		</dependency>
-
-
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+			<version>LATEST</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-entitymanager</artifactId>
+			<!-- Avoid issue #72 Could not initialize class
+			org.thymeleaf.templateresolver.ServletContextTemplateResolver due to
+			'validation is not supported' -->
+			<exclusions>
+				<exclusion>
+					<artifactId>pull-parser</artifactId>
+					<groupId>pull-parser</groupId>
+				</exclusion>
+			</exclusions>
+			<version>5.2.9.Final</version>
+		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
@@ -50,6 +67,11 @@
 			<version>LATEST</version>
 		</dependency>
 		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-jpa</artifactId>
+			<version>LATEST</version>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 			<version>LATEST</version>
@@ -69,21 +91,21 @@
 	<build>
 		<plugins>
 			<plugin>
-            <artifactId>maven-assembly-plugin</artifactId>
-            <configuration>
-                <archive>
-                    <manifest>
-                        <mainClass>
-                            io.zeebe.DemoExporter
-                        </mainClass>
-                    </manifest>
-                </archive>
-                <descriptorRefs>
-                    <descriptorRef>jar-with-dependencies</descriptorRef>
-                    <outputDirectory>${project.build.directory}</outputDirectory>
-                </descriptorRefs>
-            </configuration>
-        </plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifest>
+							<mainClass>
+								io.zeebe.CamundaExporter
+							</mainClass>
+						</manifest>
+					</archive>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+						<outputDirectory>${project.build.directory}</outputDirectory>
+					</descriptorRefs>
+				</configuration>
+			</plugin>
 
 		</plugins>
 	</build>

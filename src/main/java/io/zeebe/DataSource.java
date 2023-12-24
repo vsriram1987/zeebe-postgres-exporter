@@ -1,15 +1,23 @@
 package io.zeebe;
 
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.boot.jdbc.DataSourceBuilder;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
+@Configuration
+@EnableJpaRepositories
 public class DataSource {
 	
-	public static DriverManagerDataSource getDataSource() {
-		DriverManagerDataSource dataSource = new DriverManagerDataSource(); // org.apache.tomcat.jdbc.pool.DataSource;
-	    dataSource.setDriverClassName("org.postgresql.Driver");
-	    dataSource.setUrl("jdbc:postgresql://localhost:5432/postgres");
-	    dataSource.setUsername("postgres");
-	    dataSource.setPassword("zeebe");
-	    return dataSource;
+	@Bean
+	public javax.sql.DataSource dataSource() {
+		return DataSourceBuilder
+		        .create()
+		        .username("postgres")
+		        .password("zeebe")
+		        .url("jdbc:postgresql://localhost:5432/postgres")
+		        .driverClassName("org.postgresql.Driver")
+		        .build();
+
 	}
 }
