@@ -30,9 +30,9 @@ public class CamundaExporter implements Exporter {
     public void export(Record record) {
         System.out.println("Test Message from exporter - " + record.toJson());
         this.controller.updateLastExportedRecordPosition(record.getPosition());
-        JobEntity myJob = new JobEntity();
+        /*JobEntity myJob = new JobEntity();
         myJob.setJobType("Test Job");
-        jobRepository.save(myJob);
+        jobRepository.save(myJob);*/
         
     }
 }
