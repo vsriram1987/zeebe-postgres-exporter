@@ -1,0 +1,64 @@
+zeebe:
+  client:
+    broker.gatewayAddress: 127.0.0.1:26500
+    security.plaintext: true
+
+    worker:
+      hazelcast:
+        connection: localhost:5701
+        clusterName: dev
+        connectionTimeout: PT60S
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: zeebe
+    driverClassName: org.postgresql.Driver
+
+  jpa:
+    properties:
+        hibernate:
+            dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+
+  mustache:
+    prefix: classpath:/templates/
+    suffix: .html
+    servlet:
+      expose-request-attributes: true
+
+  data:
+    web:
+      pageable:
+        default-page-size: 10
+
+server:
+  port: 18082
+  servlet:
+    context-path: /
+  allowedOriginsUrls: ""
+
+logging:
+  level:
+    root: ERROR
+    io.zeebe: INFO
+    io.zeebe.monitor: DEBUG
+    com.hazelcast: WARN
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, metrics, prometheus
+  metrics:
+    tags:
+      application: zeebe-simple-monitor
+
+white-label:
+  logo.path: img/logo.png
+  custom:
+    title: Zeebe Simple Monitor
+    css.path: css/custom.css
+    js.path: js/custom.js

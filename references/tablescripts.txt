@@ -1,0 +1,128 @@
+-- Table: postgres.events
+
+-- DROP TABLE IF EXISTS postgres.events;
+
+CREATE TABLE IF NOT EXISTS postgres.events
+(
+    key bigint NOT NULL,
+    partitionid integer,
+    value character varying(2000) COLLATE pg_catalog."default",
+    brokerversion character varying(50) COLLATE pg_catalog."default",
+    "position" integer,
+    valuetype character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    sourcerecordposition integer,
+    intent character varying(50) COLLATE pg_catalog."default",
+    recordtype character varying(50) COLLATE pg_catalog."default",
+    rejectiontype character varying(100) COLLATE pg_catalog."default",
+    rejectionreason character varying(200) COLLATE pg_catalog."default",
+    authorizations character varying(200) COLLATE pg_catalog."default",
+    recordversion integer,
+    exportertimestamp timestamp without time zone,
+    updatedtimestamp timestamp without time zone,
+    createdtimestamp timestamp without time zone NOT NULL,
+    CONSTRAINT events_pkey PRIMARY KEY (key, valuetype)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS postgres.events
+    OWNER to postgres;
+
+--------------------------------------------------
+
+-- Table: postgres.jobs
+
+-- DROP TABLE IF EXISTS postgres.jobs;
+
+CREATE TABLE IF NOT EXISTS postgres.jobs
+(
+    key bigint NOT NULL,
+    tenantid character varying COLLATE pg_catalog."default",
+    variables character varying COLLATE pg_catalog."default",
+    bpmnprocessid character varying COLLATE pg_catalog."default",
+    elementid character varying COLLATE pg_catalog."default",
+    customheaders character varying COLLATE pg_catalog."default",
+    deadline bigint,
+    processdefinitionversion bigint,
+    type character varying COLLATE pg_catalog."default",
+    errormessage character varying COLLATE pg_catalog."default",
+    errorcode character varying COLLATE pg_catalog."default",
+    retries bigint,
+    retrybackoff bigint,
+    recurringtime bigint,
+    processdefinitionkey bigint,
+    processinstancekey bigint,
+    elementinstancekey bigint,
+    worker character varying COLLATE pg_catalog."default",
+    exportertimestamp timestamp without time zone,
+    updatedtimestamp timestamp without time zone,
+    createdtimestamp timestamp without time zone,
+    status character varying COLLATE pg_catalog."default",
+    completedtimestamp timestamp without time zone,
+    CONSTRAINT jobs_pkey PRIMARY KEY (key)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS postgres.jobs
+    OWNER to postgres;
+	
+---------------------------------
+
+-- Table: postgres.processinstances
+
+-- DROP TABLE IF EXISTS postgres.processinstances;
+
+CREATE TABLE IF NOT EXISTS postgres.processinstances
+(
+    processinstancekey bigint NOT NULL,
+    tenantid character varying(50) COLLATE pg_catalog."default",
+    bpmnprocessid character varying(100) COLLATE pg_catalog."default",
+    elementid character varying(100) COLLATE pg_catalog."default",
+    parentprocessinstancekey bigint,
+    parentelementinstancekey bigint,
+    version integer,
+    processdefinitionkey bigint,
+    bpmnelementtype character varying(50) COLLATE pg_catalog."default",
+    flowscopekey bigint,
+    bpmneventtype character varying(50) COLLATE pg_catalog."default",
+    status character varying COLLATE pg_catalog."default",
+    createdtimestamp timestamp without time zone,
+    updatedtimestamp timestamp without time zone,
+    completedtimestamp timestamp without time zone,
+    exportertimestamp timestamp without time zone,
+    CONSTRAINT processinstances_pkey PRIMARY KEY (processinstancekey)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS postgres.processinstances
+    OWNER to postgres;
+	
+-------------------------------------------------------
+
+-- Table: postgres.variables
+
+-- DROP TABLE IF EXISTS postgres.variables;
+
+CREATE TABLE IF NOT EXISTS postgres.variables
+(
+    key bigint NOT NULL,
+    tenantid character varying COLLATE pg_catalog."default",
+    bpmnprocessid character varying COLLATE pg_catalog."default",
+    name character varying COLLATE pg_catalog."default",
+    value character varying COLLATE pg_catalog."default",
+    processdefinitionkey bigint,
+    processinstancekey bigint,
+    scopekey bigint,
+    status character varying COLLATE pg_catalog."default",
+    createdtimestamp timestamp without time zone,
+    updatedtimestamp timestamp without time zone,
+    exportertimestamp timestamp without time zone,
+    CONSTRAINT variables_pkey PRIMARY KEY (key)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS postgres.variables
+    OWNER to postgres;
