@@ -126,3 +126,28 @@ TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS postgres.variables
     OWNER to postgres;
+    
+-------------------------------------------------------
+
+-- Table: postgres.variables_history
+
+-- DROP TABLE IF EXISTS postgres.variables_history;
+
+CREATE TABLE IF NOT EXISTS postgres.variables_history
+(
+    bpmnprocessid character varying COLLATE pg_catalog."default",
+    name character varying COLLATE pg_catalog."default",
+    value character varying COLLATE pg_catalog."default",
+    processdefinitionkey bigint,
+    processinstancekey bigint,
+    jobkey bigint,
+    activitytype character varying COLLATE pg_catalog."default",
+    createdtimestamp timestamp without time zone,
+    exportertimestamp timestamp without time zone,
+    CONSTRAINT variables_history_pkey PRIMARY KEY (processinstancekey, name)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS postgres.variables_history
+    OWNER to postgres;
