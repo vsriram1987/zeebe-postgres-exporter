@@ -25,14 +25,14 @@ public class JobValue {
 	private String elementId;
 	@JsonIgnore
 	private String customHeaders;
-	private int deadline;
-	private int processDefinitionVersion;
+	private long deadline;
+	private long processDefinitionVersion;
 	private String type;
 	private String errorMessage;
 	private String errorCode;
-	private int retries;
-	private int retryBackoff;
-	private int recurringTime;
+	private long retries;
+	private long retryBackoff;
+	private long recurringTime;
 	private long processDefinitionKey;
 	private long processInstanceKey;
 	private long elementInstanceKey;
@@ -74,7 +74,7 @@ public class JobValue {
 			} else {
 				statement.setTimestamp(21, null);
 			}
-			int rowsUpdated = statement.executeUpdate();
+			long rowsUpdated = statement.executeUpdate();
 			System.out.println("Total rows updated in jobs table:" + rowsUpdated);
 			VariableValue vv = new VariableValue();
 			vv.setBpmnProcessId(this.bpmnProcessId);
@@ -112,7 +112,7 @@ public class JobValue {
 				statement.setString(19, record.getIntent().toString());
 				statement.setTimestamp(20, exportertimestamp);
 				statement.setTimestamp(21, new Timestamp(new Date(record.getTimestamp()).getTime()));
-				int rowsInserted = statement.executeUpdate();
+				long rowsInserted = statement.executeUpdate();
 				System.out.println("Total rows inserted in jobs table:" + rowsInserted);
 				VariableValue vv = new VariableValue();
 				vv.setBpmnProcessId(this.bpmnProcessId);
@@ -176,19 +176,19 @@ public class JobValue {
 		this.customHeaders = customHeaders;
 	}
 
-	public int getDeadline() {
+	public long getDeadline() {
 		return deadline;
 	}
 
-	public void setDeadline(int deadline) {
+	public void setDeadline(long deadline) {
 		this.deadline = deadline;
 	}
 
-	public int getProcessDefinitionVersion() {
+	public long getProcessDefinitionVersion() {
 		return processDefinitionVersion;
 	}
 
-	public void setProcessDefinitionVersion(int processDefinitionVersion) {
+	public void setProcessDefinitionVersion(long processDefinitionVersion) {
 		this.processDefinitionVersion = processDefinitionVersion;
 	}
 
@@ -216,27 +216,27 @@ public class JobValue {
 		this.errorCode = errorCode;
 	}
 
-	public int getRetries() {
+	public long getRetries() {
 		return retries;
 	}
 
-	public void setRetries(int retries) {
+	public void setRetries(long retries) {
 		this.retries = retries;
 	}
 
-	public int getRetryBackoff() {
+	public long getRetryBackoff() {
 		return retryBackoff;
 	}
 
-	public void setRetryBackoff(int retryBackoff) {
+	public void setRetryBackoff(long retryBackoff) {
 		this.retryBackoff = retryBackoff;
 	}
 
-	public int getRecurringTime() {
+	public long getRecurringTime() {
 		return recurringTime;
 	}
 
-	public void setRecurringTime(int recurringTime) {
+	public void setRecurringTime(long recurringTime) {
 		this.recurringTime = recurringTime;
 	}
 

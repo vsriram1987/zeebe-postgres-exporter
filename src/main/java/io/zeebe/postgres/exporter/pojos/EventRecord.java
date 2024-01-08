@@ -16,17 +16,17 @@ public class EventRecord {
 	@JsonIgnore
 	private String value;
 	private String brokerVersion;
-	private int position;
+	private long position;
 	private long key;
 	private long timestamp;
 	private String valueType;
-	private int sourceRecordPosition;
+	private long sourceRecordPosition;
 	private String intent;
 	private String recordType;
 	private String rejectionType;
 	private String rejectionReason;
 	private Authorizations authorizations;
-	private int recordVersion;
+	private long recordVersion;
 
 	public void save(Record record, Connection conn) {
 		// TODO Auto-generated method stub
@@ -119,7 +119,7 @@ public class EventRecord {
 		this.brokerVersion = brokerVersion;
 	}
 
-	public int getPosition() {
+	public long getPosition() {
 		return position;
 	}
 
@@ -151,7 +151,7 @@ public class EventRecord {
 		this.valueType = valueType;
 	}
 
-	public int getSourceRecordPosition() {
+	public long getSourceRecordPosition() {
 		return sourceRecordPosition;
 	}
 
@@ -199,7 +199,7 @@ public class EventRecord {
 		this.authorizations = authorizations;
 	}
 
-	public int getRecordVersion() {
+	public long getRecordVersion() {
 		return recordVersion;
 	}
 

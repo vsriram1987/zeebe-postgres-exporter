@@ -14,8 +14,8 @@ public class ProcessInstanceValue {
     private String tenantId;
     private String bpmnProcessId;
     private String elementId;
-    private int parentProcessInstanceKey;
-    private int parentElementInstanceKey;
+    private long parentProcessInstanceKey;
+    private long parentElementInstanceKey;
     private int version;
     private long processDefinitionKey;
     private long processInstanceKey;
@@ -105,16 +105,16 @@ public class ProcessInstanceValue {
 	public void setElementId(String elementId) {
 		this.elementId = elementId;
 	}
-	public int getParentProcessInstanceKey() {
+	public long getParentProcessInstanceKey() {
 		return parentProcessInstanceKey;
 	}
-	public void setParentProcessInstanceKey(int parentProcessInstanceKey) {
+	public void setParentProcessInstanceKey(long parentProcessInstanceKey) {
 		this.parentProcessInstanceKey = parentProcessInstanceKey;
 	}
-	public int getParentElementInstanceKey() {
+	public long getParentElementInstanceKey() {
 		return parentElementInstanceKey;
 	}
-	public void setParentElementInstanceKey(int parentElementInstanceKey) {
+	public void setParentElementInstanceKey(long parentElementInstanceKey) {
 		this.parentElementInstanceKey = parentElementInstanceKey;
 	}
 	public int getVersion() {
