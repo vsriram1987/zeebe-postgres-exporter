@@ -1,12 +1,17 @@
 package io.zeebe.postgres.exporter.pojos;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.Properties;
 
 import io.camunda.zeebe.protocol.record.Record;
+import io.camunda.zeebe.protocol.record.ValueType;
 
 public class VariableValue {
 	private String tenantId;
@@ -38,7 +43,7 @@ public class VariableValue {
 			statement.setTimestamp(9, exportertimestamp);
 			statement.setTimestamp(10, new Timestamp(new Date(record.getTimestamp()).getTime()));
 			int rowsUpdated = statement.executeUpdate();
-			System.out.println("Total rows updated in variables table:" + rowsUpdated);
+			System.out.println("Total rows updated in variables table:" + this.name + "=" + this.value + rowsUpdated);
 			if (rowsUpdated == 0) {
 				throw new Exception("Nothing updated");
 			}
@@ -66,7 +71,9 @@ public class VariableValue {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
+			
 		}
+		updateVariablesHistory(this.name.replace("\"", "") + "=" + this.value.replace("\"",""), record, conn);
 	}
 	public String getTenantId() {
 		return tenantId;
@@ -110,5 +117,42 @@ public class VariableValue {
 	public void setScopeKey(long scopeKey) {
 		this.scopeKey = scopeKey;
 	}
-	
+	public void updateVariablesHistory(String variables, Record record, Connection conn) {
+		PreparedStatement statement;
+		String sql = "";
+		Timestamp exportertimestamp = new Timestamp((new Date()).getTime());
+		variables = variables.replace("{", "").replace("}", "").replace(",", "\r\n");
+
+		Properties properties = new Properties();
+		try {
+			properties.load(new ByteArrayInputStream(variables.getBytes(StandardCharsets.UTF_8)));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		for(Object key : properties.keySet()){
+
+			// TODO Auto-generated catch block
+			sql = "INSERT INTO postgres.variables_history("
+					+ "	bpmnprocessid, name, value, processdefinitionkey, processinstancekey, activitytype, jobkey, createdtimestamp, exportertimestamp)"
+					+ "	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+			try {
+				statement = conn.prepareStatement(sql);
+				statement.setString(1, this.bpmnProcessId);
+				statement.setString(2, key.toString());
+				statement.setString(3, properties.get(key).toString());
+				statement.setLong(4, this.processDefinitionKey);
+				statement.setLong(5, this.processInstanceKey);
+				statement.setString(6, record.getValueType().name());
+				statement.setLong(7, record.getKey());
+				statement.setTimestamp(8, new Timestamp(new Date(record.getTimestamp()).getTime()));
+				statement.setTimestamp(9, exportertimestamp);
+				int rowsInserted = statement.executeUpdate();
+				System.out.println("Total rows inserted in variables history table:" + rowsInserted);
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+	}
 }

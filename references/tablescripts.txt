@@ -144,7 +144,7 @@ CREATE TABLE IF NOT EXISTS postgres.variables_history
     activitytype character varying COLLATE pg_catalog."default",
     createdtimestamp timestamp without time zone,
     exportertimestamp timestamp without time zone,
-    CONSTRAINT variables_history_pkey PRIMARY KEY (processinstancekey, name)
+    CONSTRAINT variables_history_pkey PRIMARY KEY (name, value, processdefinitionkey, processinstancekey, jobkey)
 )
 
 TABLESPACE pg_default;

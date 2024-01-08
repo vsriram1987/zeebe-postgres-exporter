@@ -92,42 +92,11 @@ public class ProcessInstanceCreationValue {
 
 	public void save(Record record, Connection conn) {
 		// TODO Auto-generated method stub
-		PreparedStatement statement;
-
-		String sql = "";
-		Timestamp exportertimestamp = new Timestamp((new Date()).getTime());
-		this.variables = this.variables.replace("{", "").replace("}", "").replace(",", "\r\n");
-
-		Properties properties = new Properties();
-		try {
-			properties.load(new ByteArrayInputStream(this.variables.getBytes(StandardCharsets.UTF_8)));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		for(Object key : properties.keySet()){
-
-			// TODO Auto-generated catch block
-			sql = "INSERT INTO postgres.variables_history("
-					+ "	bpmnprocessid, name, value, processdefinitionkey, processinstancekey, activitytype, createdtimestamp, exportertimestamp)"
-					+ "	VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-			try {
-				statement = conn.prepareStatement(sql);
-				statement.setString(1, this.bpmnProcessId);
-				statement.setString(2, key.toString());
-				statement.setString(3, properties.get(key).toString());
-				statement.setLong(4, this.processDefinitionKey);
-				statement.setLong(5, this.processInstanceKey);
-				statement.setString(6, ValueType.PROCESS_INSTANCE_CREATION.name());
-				statement.setTimestamp(7, new Timestamp(new Date(record.getTimestamp()).getTime()));
-				statement.setTimestamp(8, exportertimestamp);
-				int rowsInserted = statement.executeUpdate();
-				System.out.println("Total rows inserted in variables history table:" + rowsInserted);
-			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		}
+		VariableValue vv = new VariableValue();
+		vv.setBpmnProcessId(this.bpmnProcessId);
+		vv.setProcessDefinitionKey(this.processDefinitionKey);
+		vv.setProcessInstanceKey(this.processInstanceKey);
+		vv.updateVariablesHistory(this.variables, record, conn);
 	}
 
 }

@@ -35,7 +35,7 @@ public class CamundaExporter implements Exporter {
 		context.setFilter(new ExporterFilter());
 
 		try {
-
+			Class.forName("org.postgresql.Driver");
 			conn = DriverManager.getConnection(dbURL, username, password);
 
 			if (conn != null) {

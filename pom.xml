@@ -19,11 +19,6 @@
 			<version>8.3.4</version>
 		</dependency>
 		<dependency>
-			<groupId>org.json</groupId>
-			<artifactId>json</artifactId>
-			<version>20230618</version>
-		</dependency>
-		<dependency>
 			<groupId>io.zeebe</groupId>
 			<artifactId>zeebe-exporter-protobuf</artifactId>
 			<version>1.4.0</version>

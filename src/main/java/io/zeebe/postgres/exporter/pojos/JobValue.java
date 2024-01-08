@@ -76,7 +76,11 @@ public class JobValue {
 			}
 			int rowsUpdated = statement.executeUpdate();
 			System.out.println("Total rows updated in jobs table:" + rowsUpdated);
-			this.updateVariablesHistory(record, conn);
+			VariableValue vv = new VariableValue();
+			vv.setBpmnProcessId(this.bpmnProcessId);
+			vv.setProcessDefinitionKey(this.processDefinitionKey);
+			vv.setProcessInstanceKey(this.processInstanceKey);
+			vv.updateVariablesHistory(this.variables, record, conn);
 			if (rowsUpdated == 0) {
 				throw new Exception("Nothing updated");
 			}
@@ -110,7 +114,11 @@ public class JobValue {
 				statement.setTimestamp(21, new Timestamp(new Date(record.getTimestamp()).getTime()));
 				int rowsInserted = statement.executeUpdate();
 				System.out.println("Total rows inserted in jobs table:" + rowsInserted);
-				this.updateVariablesHistory(record, conn);
+				VariableValue vv = new VariableValue();
+				vv.setBpmnProcessId(this.bpmnProcessId);
+				vv.setProcessDefinitionKey(this.processDefinitionKey);
+				vv.setProcessInstanceKey(this.processInstanceKey);
+				vv.updateVariablesHistory(this.variables, record, conn);
 			} catch (SQLException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -144,45 +152,6 @@ public class JobValue {
 		}
 	}
 	
-	public void updateVariablesHistory(Record record, Connection conn) {
-		PreparedStatement statement;
-		String sql = "";
-		Timestamp exportertimestamp = new Timestamp((new Date()).getTime());
-		this.variables = this.variables.replace("{", "").replace("}", "").replace(",", "\r\n");
-
-		Properties properties = new Properties();
-		try {
-			properties.load(new ByteArrayInputStream(this.variables.getBytes(StandardCharsets.UTF_8)));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		for(Object key : properties.keySet()){
-
-			// TODO Auto-generated catch block
-			sql = "INSERT INTO postgres.variables_history("
-					+ "	bpmnprocessid, name, value, processdefinitionkey, processinstancekey, activitytype, jobkey, createdtimestamp, exportertimestamp)"
-					+ "	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-			try {
-				statement = conn.prepareStatement(sql);
-				statement.setString(1, this.bpmnProcessId);
-				statement.setString(2, key.toString());
-				statement.setString(3, properties.get(key).toString());
-				statement.setLong(4, this.processDefinitionKey);
-				statement.setLong(5, this.processInstanceKey);
-				statement.setString(6, ValueType.JOB.name());
-				statement.setLong(7, record.getKey());
-				statement.setTimestamp(8, new Timestamp(new Date(record.getTimestamp()).getTime()));
-				statement.setTimestamp(9, exportertimestamp);
-				int rowsInserted = statement.executeUpdate();
-				System.out.println("Total rows inserted in variables history table:" + rowsInserted);
-			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		}
-	}
-
 	public String getBpmnProcessId() {
 		return bpmnProcessId;
 	}
