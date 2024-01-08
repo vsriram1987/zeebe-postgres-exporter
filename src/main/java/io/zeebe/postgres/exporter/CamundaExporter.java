@@ -18,6 +18,7 @@ import io.camunda.zeebe.exporter.api.context.Controller;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.ValueType;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
+import io.zeebe.postgres.exporter.pojos.DeploymentValue;
 import io.zeebe.postgres.exporter.pojos.EventRecord;
 import io.zeebe.postgres.exporter.pojos.JobValue;
 import io.zeebe.postgres.exporter.pojos.ProcessInstanceCreationValue;
@@ -128,9 +129,6 @@ public class CamundaExporter implements Exporter {
 			try {
 				jv = om.readValue(record.getValue().toJson(), JobValue.class);
 				// Value as string cannot be deserialized so added @jsonignore
-				if (jv.getVariables() != null) {
-					printJsonObject(jv.getVariables());
-				}
 			} catch (JsonMappingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -141,6 +139,19 @@ public class CamundaExporter implements Exporter {
 			jv.save(record, conn);
 		} else if (record.getValueType() == ValueType.DEPLOYMENT) {
 			er.save(record, conn);
+			DeploymentValue dv = new DeploymentValue();
+			try {
+				dv = om.readValue(record.getValue().toJson(), DeploymentValue.class);
+				// Value as string cannot be deserialized so added @jsonignore
+
+			} catch (JsonMappingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (JsonProcessingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			dv.save(record, conn, er.getTimestamp());
 		} else if (record.getValueType() == ValueType.VARIABLE) {
 			er.save(record, conn);
 			VariableValue vv = new VariableValue();
@@ -158,21 +169,6 @@ public class CamundaExporter implements Exporter {
 		} else {
 			System.out.println("Record not saved with value type: " + record.getValueType());
 		}
-	}
-
-	public void printJsonObject(String variables) {
-		variables = variables.replace("{", "").replace("}", "").replace(",", "\r\n");
-
-		Properties properties = new Properties();
-		try {
-			properties.load(new ByteArrayInputStream(variables.getBytes(StandardCharsets.UTF_8)));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		for(Object key : properties.keySet()){
-			   System.out.println(key + ":" + properties.get(key));
-			  }
 	}
 
 }
